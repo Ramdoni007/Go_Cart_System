@@ -15,4 +15,8 @@ migratedown:
 
 migratefix:
 	migrate -path db/migration/ -database "postgresql://root:secret@localhost:5432/cart_system?sslmode=disable" force 1
-.PHONY: postgres createdb dropdb
+
+sqlc:
+	sqlc generate
+
+.PHONY: postgres createdb dropdb migratefix sqlc

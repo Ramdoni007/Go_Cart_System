@@ -12,5 +12,5 @@ CREATE TABLE "cart"
 (
     "id"           bigserial PRIMARY KEY,
     "name_product" varchar NOT NULL,
-    "entity"       bigint  NOT NULL
+    "quantity"       bigint  NOT NULL
 );
