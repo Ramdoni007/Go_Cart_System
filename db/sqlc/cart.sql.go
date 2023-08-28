@@ -40,18 +40,15 @@ func (q *Queries) DeleteCart(ctx context.Context, id int64) error {
 }
 
 const getCart = `-- name: GetCart :one
-SELECT
+SELECT id, name_product, quantity
 FROM cart
 WHERE id = $1 LIMIT 1
 `
 
-type GetCartRow struct {
-}
-
-func (q *Queries) GetCart(ctx context.Context, id int64) (GetCartRow, error) {
+func (q *Queries) GetCart(ctx context.Context, id int64) (Cart, error) {
 	row := q.db.QueryRowContext(ctx, getCart, id)
-	var i GetCartRow
-	err := row.Scan()
+	var i Cart
+	err := row.Scan(&i.ID, &i.NameProduct, &i.Quantity)
 	return i, err
 }
 

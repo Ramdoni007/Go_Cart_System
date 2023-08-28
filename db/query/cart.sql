@@ -4,7 +4,7 @@ INSERT INTO cart (id,
 VALUES ($1, $2, $3) RETURNING *;
 
 -- name: GetCart :one
-SELECT
+SELECT *
 FROM cart
 WHERE id = $1 LIMIT 1;
 

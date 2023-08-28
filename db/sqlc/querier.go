@@ -13,7 +13,7 @@ type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DeleteCart(ctx context.Context, id int64) error
 	DeleteUser(ctx context.Context, username string) error
-	GetCart(ctx context.Context, id int64) (GetCartRow, error)
+	GetCart(ctx context.Context, id int64) (Cart, error)
 	GetUser(ctx context.Context, username string) (User, error)
 	GetUserForUpdate(ctx context.Context, username string) (User, error)
 	UpdateCart(ctx context.Context, arg UpdateCartParams) (Cart, error)
