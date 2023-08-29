@@ -14,7 +14,6 @@ func CreateCartForUpdate(t *testing.T) Cart {
 		NameProduct: "LAPTOP ROG 454YZ",
 		Quantity:    5,
 	}
-
 	cart, err := testQueris.CreateCart(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, cart)

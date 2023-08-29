@@ -18,3 +18,13 @@ WHERE id = $1 RETURNING *;
 DELETE
 FROM cart
 WHERE id = $1;
+
+-- name: GetQuantity :one
+SELECT quantity
+FROM cart
+WHERE id = $1 LIMIT 1;
+
+-- name: GetQuantityForUpdate :one
+SELECT quantity
+FROM cart
+WHERE id = $1;

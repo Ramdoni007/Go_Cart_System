@@ -14,6 +14,8 @@ type Querier interface {
 	DeleteCart(ctx context.Context, id int64) error
 	DeleteUser(ctx context.Context, username string) error
 	GetCart(ctx context.Context, id int64) (Cart, error)
+	GetQuantity(ctx context.Context, id int64) (int64, error)
+	GetQuantityForUpdate(ctx context.Context, id int64) (int64, error)
 	GetUser(ctx context.Context, username string) (User, error)
 	GetUserForUpdate(ctx context.Context, username string) (User, error)
 	UpdateCart(ctx context.Context, arg UpdateCartParams) (Cart, error)

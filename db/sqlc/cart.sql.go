@@ -52,6 +52,32 @@ func (q *Queries) GetCart(ctx context.Context, id int64) (Cart, error) {
 	return i, err
 }
 
+const getQuantity = `-- name: GetQuantity :one
+SELECT quantity
+FROM cart
+WHERE id = $1 LIMIT 1
+`
+
+func (q *Queries) GetQuantity(ctx context.Context, id int64) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getQuantity, id)
+	var quantity int64
+	err := row.Scan(&quantity)
+	return quantity, err
+}
+
+const getQuantityForUpdate = `-- name: GetQuantityForUpdate :one
+SELECT quantity
+FROM cart
+WHERE id = $1
+`
+
+func (q *Queries) GetQuantityForUpdate(ctx context.Context, id int64) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getQuantityForUpdate, id)
+	var quantity int64
+	err := row.Scan(&quantity)
+	return quantity, err
+}
+
 const updateCart = `-- name: UpdateCart :one
 UPDATE cart
 SET name_product = $2,
