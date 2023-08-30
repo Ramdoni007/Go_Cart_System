@@ -40,8 +40,9 @@ func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
 }
 
 type QuantityTxParams struct {
-	ID       int64 `json:"id"`
-	Quantity int64 `json:"quantity"`
+	ID          int64  `json:"id"`
+	NameProduct string `json:"name_product"`
+	Quantity    int64  `json:"quantity"`
 }
 
 type QuantityTxResult struct {
@@ -50,7 +51,7 @@ type QuantityTxResult struct {
 	EditQuantity   int64 `json:"edit_quantity"`
 }
 
-func (store *Store) TransferTx(ctx context.Context, arg QuantityTxParams) (QuantityTxResult, error) {
+func (store *Store) QuantityTx(ctx context.Context, arg QuantityTxParams) (QuantityTxResult, error) {
 	var result QuantityTxResult
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
@@ -63,7 +64,7 @@ func (store *Store) TransferTx(ctx context.Context, arg QuantityTxParams) (Quant
 			return err
 		}
 
-		result.BeforeQuantity, err = q.GetQuantity(ctx, arg.ID)
+		result.BeforeQuantity, err = q.GetQuantity(ctx, arg.Quantity)
 		if err != nil {
 			return err
 		}

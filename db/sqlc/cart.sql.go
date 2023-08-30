@@ -11,7 +11,7 @@ import (
 
 const createCart = `-- name: CreateCart :one
 INSERT INTO cart (id,
-                  name_product, quantity)
+name_product, quantity)
 VALUES ($1, $2, $3) RETURNING id, name_product, quantity
 `
 
@@ -78,21 +78,19 @@ func (q *Queries) GetQuantityForUpdate(ctx context.Context, id int64) (int64, er
 	return quantity, err
 }
 
-const updateCart = `-- name: UpdateCart :one
+const updateCartForQuantity = `-- name: UpdateCartForQuantity :one
 UPDATE cart
-SET name_product = $2,
-    quantity     = $3
+SET quantity = $2
 WHERE id = $1 RETURNING id, name_product, quantity
 `
 
-type UpdateCartParams struct {
-	ID          int64  `json:"id"`
-	NameProduct string `json:"name_product"`
-	Quantity    int64  `json:"quantity"`
+type UpdateCartForQuantityParams struct {
+	ID       int64 `json:"id"`
+	Quantity int64 `json:"quantity"`
 }
 
-func (q *Queries) UpdateCart(ctx context.Context, arg UpdateCartParams) (Cart, error) {
-	row := q.db.QueryRowContext(ctx, updateCart, arg.ID, arg.NameProduct, arg.Quantity)
+func (q *Queries) UpdateCartForQuantity(ctx context.Context, arg UpdateCartForQuantityParams) (Cart, error) {
+	row := q.db.QueryRowContext(ctx, updateCartForQuantity, arg.ID, arg.Quantity)
 	var i Cart
 	err := row.Scan(&i.ID, &i.NameProduct, &i.Quantity)
 	return i, err

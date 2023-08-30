@@ -28,6 +28,10 @@ func RandomString(n int) string {
 	return sb.String()
 }
 
+func RandomQuantity() int64 {
+	return RandomInt(1, 1000)
+}
+
 func RandomOwner() string {
 	return RandomString(6)
 }

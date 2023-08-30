@@ -2,37 +2,54 @@ package db
 
 import (
 	"context"
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestStore(t *testing.T) {
 	store := NewStore(testDB)
 
 	// First will crateCart data in Store in Database
-	arg := CreateCartParams{
-		ID:          17,
-		NameProduct: "Laptop ThinkPad",
-		Quantity:    2,
+	cart := CreateRandomCart(t)
+
+	n := 1
+
+	// run concurrent go routine
+	errs := make(chan error)
+	results := make(chan QuantityTxResult)
+
+	for i := 0; i < n; i++ {
+		go func() {
+			result, err := store.QuantityTx(context.Background(), QuantityTxParams{
+				NameProduct: cart.NameProduct,
+				Quantity:    cart.Quantity,
+			})
+			errs <- err
+			results <- result
+		}()
 	}
+	// check result
+	for i := 0; i < n; i++ {
+		err := <-errs
+		require.NoError(t, err)
 
-	cart, err := store.CreateCart(context.Background(), arg)
-	require.NoError(t, err)
-	require.NotEmpty(t, cart)
+		result := <-results
+		require.NotEmpty(t, result)
 
-	require.Equal(t, arg.ID, cart.ID)
-	require.Equal(t, arg.NameProduct, cart.NameProduct)
-	require.Equal(t, arg.Quantity, cart.Quantity)
+		// Check Result
+		Quantity := result.ID
+		require.NotEmpty(t, Quantity)
+		require.Equal(t, cart.ID, Quantity.ID)
+		require.Equal(t, cart.NameProduct, Quantity.NameProduct)
+		require.Equal(t, cart.Quantity, Quantity.Quantity)
 
+		_, err = store.GetCart(context.Background(), Quantity.ID)
+		require.NoError(t, err)
+
+	}
 	// second will getQuantity Data in table quantity in database
 
-	cart2, err := store.GetQuantity(context.Background())
-	require.NoError(t, err)
-	require.NotEmpty(t, cart2)
-
 	// third will getQuantity Data in table quantity in database after experiencing a change in quantity
-	cart3, err := store.GetQuantityForUpdate(context.Background())
-	require.NoError(t, err)
-	require.NotEmpty(t, cart3)
 
 }

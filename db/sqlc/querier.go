@@ -18,7 +18,7 @@ type Querier interface {
 	GetQuantityForUpdate(ctx context.Context, id int64) (int64, error)
 	GetUser(ctx context.Context, username string) (User, error)
 	GetUserForUpdate(ctx context.Context, username string) (User, error)
-	UpdateCart(ctx context.Context, arg UpdateCartParams) (Cart, error)
+	UpdateCartForQuantity(ctx context.Context, arg UpdateCartForQuantityParams) (Cart, error)
 }
 
 var _ Querier = (*Queries)(nil)
